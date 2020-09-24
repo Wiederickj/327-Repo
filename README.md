@@ -1,11 +1,22 @@
 # 327-Repo
 
-Useful Git commands:
+Group Members:
 
+Jackson Wiederick
+Hamza Sherik
+Gilbert Chien
+Adrian Putz-Preyra
+
+How to clone repo:
+git clone git@github.com:Wiederickj/327-Repo.git
+open folder on computer:
+git init 
+
+Useful Git commands:
 git init 
 git status 
 git add 
-git commit-m ""
+git commit-m "enter message"
 git push 
 git pull 
 git branch 
@@ -20,7 +31,7 @@ git remote
 git diff
 git reset
 
-git clone https??????
+git clone EnterWebsiteURL
 git init 
 git add .
 git push
@@ -33,8 +44,8 @@ git init
 git add README.md 
 git commit -m "first commit" 
 git branch -M master 
-git remote add origin git@github.com:Wiederickj/ENTERNAME.git 
+git remote add origin git@github.com:USERNAME/ENTERNAME.git 
 git push -u origin master
 
 
-rm -rf .git
+rm -rf .git //close already initalized git 
