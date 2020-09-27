@@ -2,12 +2,13 @@
 
 Group Members:
 
-Jackson Wiederick
-Hamza Sherik
-Gilbert Chien
-Adrian Putz-Preyra
+- Jackson Wiederick
+- Hamza Sherik
+- Gilbert Chien
+- Adrian Putz-Preyra
 
 How to clone repo:
+``` bash
 git clone git@github.com:Wiederickj/327-Repo.git
 open folder on computer:
 git init 
@@ -49,3 +50,4 @@ git push -u origin master
 
 
 rm -rf .git //close already initalized git 
+```
