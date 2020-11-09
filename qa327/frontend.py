@@ -34,6 +34,8 @@ def register_post():
 
     elif not is_valid_password(password):
         error_message = "Password not strong enough"
+    elif not is_valid_user(name):
+        error_message = "Username not allowed"
     else:
         user = bn.get_user(email)
         if user:
@@ -63,6 +65,13 @@ def check_empty_fields(field):
     if not field:
         return render_template('login.html',
         message='Field is required')
+
+
+def is_valid_user(name):
+    #Returns the boolean for valid 
+    #:param user: the user in question
+    INVALID_USER = (len(name) < 2 or len(name) >20)
+    return False if INVALID_USER else True
 
 
 def is_valid_email(email):
@@ -103,6 +112,7 @@ def is_valid_password(password):
 def login_post():
     email = request.form.get('email')
     password = request.form.get('password')
+    #name = request.form.get('name')
     
     # Re render login page with error message 
     # if pwd field is empty or wrong format
@@ -114,6 +124,8 @@ def login_post():
         return render_template('login.html', message='Email format error')
     elif not is_valid_password(password):
         return render_template('login.html', message='Invalid password')
+    #elif not is_valid_user(name):
+       # return render_template('login.html', message='Invalid UserName')
     elif user:
         session['logged_in'] = user.email
         """
