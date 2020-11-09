@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}Profile{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<h2 id="welcome-header">Welcome {{ user.name }} !</h2>
+
+<a href='/logout'>logout</a>
+
+<h3 id="balance">Your balance is ${{ user.balance }}</h3>
+
+<h2 >Here are all available tickets</h2>
+
+<div id="tickets">
+{% for ticket in tickets %}
+    <div>
+        <h4>{{ ticket.name }} {{ ticket.price }}</h4>
+    </div>
+{% endfor %}
+</div>
+<br/>
+<h2>Add a new ticket to sell:</h2>
+<form id="add-ticket" action="/sell" method="POST">
+    Name: <input type="text" name="name"/><br/>
+    Number of tickets: <input type="number" name="quantity"/><br/>
+    Price: <input type="number" name="price"/><br/>
+    Sale Ends: <input type="date" name="expiration"/><br/>
+    <input type="submit"/>
+</form>
+<br/>
+<h2>Purchase tickets:</h2>
+<form id="add-ticket" action="/buy" method="POST">
+    Name: <input type="text" name="name"/><br/>
+    Number of tickets: <input type="number" name="quantity"/><br/>
+    <input type="submit"/>
+</form>
+<br/>
+<h2>Ticket Editor:</h2>
+<form id="add-ticket" action="/update" method="POST">
+    Name: <input type="text" name="name"/><br/>
+    Number of tickets: <input type="number" name="quantity"/><br/>
+    Price: <input type="number" name="price"/><br/>
+    Sale Ends: <input type="date" name="expiration"/><br/>
+    <input type="submit"/>
+</form>
+
+{% endblock %}
