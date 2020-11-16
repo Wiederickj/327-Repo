@@ -4,6 +4,9 @@
 
 ## Instructions: 
 
+Repo_OwnerId: #55999892
+Repo_Name = 327 Repo
+
 First, clone this repo:
 ```
 git clone https://github.com/CISC-CMPE-327/CI-Python
