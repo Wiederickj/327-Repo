@@ -282,6 +282,9 @@ class UserProfilePageTestFrontEnd(BaseCase):
         self.open(base_url)
         
         #enter ticket name into #sell element
-        self.type("#name", "test_frontend1")
+        self.type("#sell_name", "test_frontend1")
         
         #enter quantity into #quantity element
+        self.type("#sell_quantity", 10)
+        
+        self.type("#sell_price", 10)
