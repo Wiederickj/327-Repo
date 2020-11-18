@@ -262,7 +262,6 @@ class UserProfilePageTestFrontEnd(BaseCase):
       
     #test R3.9  
     @patch('qa327.backend.get_user', return_value=new_test_user)
-    @patch('qa327.backend.get_ticket', return_value=new_test_ticket_1)
     def test_sell_form(self, *_):
         
         # open /logout to invalidate any current logged in sessions
@@ -281,10 +280,24 @@ class UserProfilePageTestFrontEnd(BaseCase):
         #open user profile page
         self.open(base_url)
         
-        #enter ticket name into #sell element
+        #enter ticket name into #sell_name element
         self.type("#sell_name", "test_frontend1")
         
-        #enter quantity into #quantity element
+        #enter quantity into #sell_quantity element
         self.type("#sell_quantity", 10)
         
+        #enter price into #sell_price element
         self.type("#sell_price", 10)
+        
+        #enter expiration date into #sell_date element
+        self.type("#sell_date", "20210101")
+        
+        #click sell button
+        self.click('input[value="sell"]')
+        
+        #confirm ticket was put up for sale successfully
+        sell.assert_element("#sell_message")
+        sell.assert_text("Sold!", "#sell_message")
+        
+    #test R3.10
+    
