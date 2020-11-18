@@ -23,11 +23,11 @@ class User(db.Model):
     name = db.Column(db.String(1000))
     balance = db.Column(db.Numeric(10,2), default=0)
    
-class Ticket(db.model):
+class Ticket(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     owner = db.Column(db.String(100))
     name = db.Column(db.String(100))
-    quanitity = db.Column(db.Numeric(10,2), default = 0)
+    quantity = db.Column(db.Numeric(10,2), default = 0)
     price = db.Column(db.Numeric(10,2), default = 0)
     date = db.Column(db.String(100))
 

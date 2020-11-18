@@ -3,7 +3,7 @@ from seleniumbase import BaseCase
 
 from qa327_test.conftest import base_url
 from unittest.mock import patch
-from qa327.models import db, User
+from qa327.models import db, User, Ticket
 from werkzeug.security import generate_password_hash, check_password_hash
 
 """
@@ -16,6 +16,24 @@ new_test_user = User(
     name='test_frontend',
     password=generate_password_hash('test_Frontend0!'),
     balance=100
+)
+
+#sample ticket 1
+new_test_ticket_1 = Ticket(
+    owner = 'test_frontend1@test.com',
+    name='test_frontend1',
+    quantity = 10,
+    price = 10,
+    date = '20210101'
+)
+
+#sample ticket 2
+new_test_ticket_2 = Ticket(
+    owner = 'test_frontend2@test.com',
+    name='test_frontend2',
+    quantity = 15,
+    price = 15,
+    date = '20210202'
 )
 
 #testing frontend user profile page
@@ -105,6 +123,8 @@ class UserProfilePageTestFrontEnd(BaseCase):
         
     #test R3.5
     @patch('qa327.backend.get_user', return_value=new_test_user)
+    @patch('qa327.backend.get_ticket', return_value=new_test_ticket_1)
+    @patch('qa327.backend.get_ticket', return_value=new_test_ticket_2)
     def test_available_tickets(self, *_):
         
         # open /logout to invalidate any current logged in sessions
@@ -123,4 +143,9 @@ class UserProfilePageTestFrontEnd(BaseCase):
         # open user profile page
         self.open(base_url)
         
+        #validate all available tickets are shown
+        self.assert_element("#tickets")
+        self.assert_text("test_frontend1 10")
+        
+    #test R3.6
         
