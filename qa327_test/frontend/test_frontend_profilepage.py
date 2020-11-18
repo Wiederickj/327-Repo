@@ -145,7 +145,7 @@ class UserProfilePageTestFrontEnd(BaseCase):
         #validate all available tickets are shown
         self.assert_element("#tickets div h4")
         self.assert_text("test_frontend1 10", "#tickets div h4")
-    """    
+    """"""    
     #test R3.6
     @patch('qa327.backend.get_user', return_value=new_test_user)
     def test_sell_form(self, *_):
@@ -188,7 +188,7 @@ class UserProfilePageTestFrontEnd(BaseCase):
         
     #test R3.7
     @patch('qa327.backend.get_user', return_value=new_test_user)
-    def test_sell_form(self, *_):
+    def test_buy_form(self, *_):
         
         # open /logout to invalidate any current logged in sessions
         self.open(base_url + '/logout')
@@ -220,7 +220,7 @@ class UserProfilePageTestFrontEnd(BaseCase):
         
     #test R3.7
     @patch('qa327.backend.get_user', return_value=new_test_user)
-    def test_sell_form(self, *_):
+    def test_update_form(self, *_):
         
         # open /logout to invalidate any current logged in sessions
         self.open(base_url + '/logout')
@@ -257,12 +257,12 @@ class UserProfilePageTestFrontEnd(BaseCase):
         #validate update form includes date element with correct attached phrase
         self.assert_element("#date")
         self.assert_text("Expiration Date", "#date")
-        
+    """    
     #test R3.8
       
     #test R3.9  
     @patch('qa327.backend.get_user', return_value=new_test_user)
-    def test_sell_form(self, *_):
+    def test_sell_post(self, *_):
         
         # open /logout to invalidate any current logged in sessions
         self.open(base_url + '/logout')
@@ -295,9 +295,66 @@ class UserProfilePageTestFrontEnd(BaseCase):
         #click sell button
         self.click('input[value="sell"]')
         
-        #confirm ticket was put up for sale successfully
-        sell.assert_element("#sell_message")
-        sell.assert_text("Sold!", "#sell_message")
-        
     #test R3.10
-    
+    @patch('qa327.backend.get_user', return_value=new_test_user)
+    def test_buy_post(self, *_):
+        
+        # open /logout to invalidate any current logged in sessions
+        self.open(base_url + '/logout')
+        
+        #login page opens
+        self.open(base_url + '/login')
+        
+        #enter email and password of test_user into #email and #password elements
+        self.type("#email", "test_frontend@test.com")
+        self.type("#password", "test_Frontend0!")
+        
+        #click login button
+        self.click('input[type="submit"]')
+        
+        #open user profile page
+        self.open(base_url)
+        
+        #enter ticket name into #buy_name element
+        self.type("#buy_name", "test_frontend1")
+        
+        #enter quantity into #buy_quantity element
+        self.type("#buy_quantity", 10)
+        
+        #click buy button
+        self.click('input[value="buy"]')
+        
+    #test R3.11
+    @patch('qa327.backend.get_user', return_value=new_test_user)
+    def test_update_post(self, *_):
+        
+        # open /logout to invalidate any current logged in sessions
+        self.open(base_url + '/logout')
+        
+        #login page opens
+        self.open(base_url + '/login')
+        
+        #enter email and password of test_user into #email and #password elements
+        self.type("#email", "test_frontend@test.com")
+        self.type("#password", "test_Frontend0!")
+        
+        #click login button
+        self.click('input[type="submit"]')
+        
+        #open user profile page
+        self.open(base_url)
+        
+        #enter ticket name into #update_name element
+        self.type("#update_name", "test_frontend1")
+        
+        #enter quantity into #update_quantity element
+        self.type("#update_quantity", 10)
+        
+        #enter price into #update_price element
+        self.type("#update_price", 10)
+        
+        #enter expiration date into #update_date element
+        self.type("#update_date", "20210101")
+        
+        #click update button
+        self.click('input[value="update"]')
