@@ -21,7 +21,7 @@
 {% endfor %}
 </div>
 
-<h2 id = "sell-header">Add a new ticket to sell:</h2>
+<h2 id = "sell-header">Sell a Ticket!</h2>
 <h4 id='message'>{{message}}</h4>
 <form method="post">
   <div class="form-group">
@@ -33,8 +33,37 @@
     <input class="form-control" name="price" id="price" required>
     <label for="date">Expiration Date</label>
     <input class="form-control" name="date" id="date" required>
-    <input class="btn btn-primary" type="submit" value="Register">
-  <a href='/login' class="btn btn-primary" id="btn-submit" >Login</a>
+    <input class="btn btn-primary" type="submit" value="Sell">
+  </div>
+</form>
+<br>
+
+<h2 id = "buy-header">Buy a Ticket!</h2>
+<h4 id='message'>{{message}}</h4>
+<form method="post">
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input class="form-control" name="name" id="name" required>
+    <label for="quantitiy">Quanitity</label>
+    <input class="form-control" name="quantity" id="quantity" required>
+    <input class="btn btn-primary" type="submit" value="Buy">
+  </div>
+</form>
+<br>
+
+<h2 id = "update-header">Update a Ticket!</h2>
+<h4 id='message'>{{message}}</h4>
+<form method="post">
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input class="form-control" name="name" id="name" required>
+    <label for="quantitiy">Quanitity</label>
+    <input class="form-control" name="quantity" id="quantity" required>
+    <label for="price">Price</label>
+    <input class="form-control" name="price" id="price" required>
+    <label for="date">Expiration Date</label>
+    <input class="form-control" name="date" id="date" required>
+    <input class="btn btn-primary" type="submit" value="Update">
   </div>
 </form>
 
