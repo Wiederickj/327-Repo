@@ -15,7 +15,7 @@ def get_user(email):
     user = User.query.filter_by(email=email).first()
     return user
     
-def get_ticket(owner, name):
+def get_ticket(owner, name, price):
     ticket = Ticket.query.filter_by(owner=owner, name=name, price=price).first()
     return ticket
 
