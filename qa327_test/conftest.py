@@ -9,7 +9,6 @@ from qa327.__main__ import app
 import threading
 from werkzeug.serving import make_server
 
-
 base_url = 'http://localhost:{}'.format(FLASK_PORT)
 
 class ServerThread(threading.Thread):
