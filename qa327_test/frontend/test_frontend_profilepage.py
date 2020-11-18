@@ -69,7 +69,7 @@ class UserProfilePageTestFrontEnd(BaseCase):
         # open user profile page
         self.open(base_url)
         
-        #validate  welcome-header element outputs correct phrase
+        #validate  welcome-header element exists and outputs correct phrase
         self.assert_element("#welcome-header")
         self.assert_text("Hi test_frontend", "#welcome-header")
         
@@ -117,14 +117,13 @@ class UserProfilePageTestFrontEnd(BaseCase):
         # open user profile page
         self.open(base_url)
         
-        #validate test_user balance is shown on page
+        #validate logout link exists
         self.assert_element("#/logout")
         self.assert_text("logout", "#/logout")
         
     #test R3.5
     @patch('qa327.backend.get_user', return_value=new_test_user)
     @patch('qa327.backend.get_ticket', return_value=new_test_ticket_1)
-    @patch('qa327.backend.get_ticket', return_value=new_test_ticket_2)
     def test_available_tickets(self, *_):
         
         # open /logout to invalidate any current logged in sessions
@@ -144,8 +143,48 @@ class UserProfilePageTestFrontEnd(BaseCase):
         self.open(base_url)
         
         #validate all available tickets are shown
-        self.assert_element("#tickets")
-        self.assert_text("test_frontend1 10")
+        self.assert_element("#tickets div h4")
+        self.assert_text("test_frontend1 10", "#tickets div h4")
         
     #test R3.6
+    @patch('qa327.backend.get_user', return_value=new_test_user)
+    def test_sell_form(self, *_):
+        
+        # open /logout to invalidate any current logged in sessions
+        self.open(base_url + '/logout')
+        
+        #login page opens
+        self.open(base_url + '/login')
+        
+        #enter email and password of test_user into #email and #password elements
+        self.type("#email", "test_frontend@test.com")
+        self.type("#password", "test_Frontend0!")
+        
+        # click login button
+        self.click('input[type="submit"]')
+        
+        # open user profile page
+        self.open(base_url)
+        
+        #validate sell form exists
+        self.assert_element("#sell-header")
+        self.assert_text("Add a new ticket to sell", "#sell-header")
+        
+        #validate sell form includes #name element with correct attached phrase
+        self.assert_element("#name")
+        self.assert_text("Name", "#name")
+        
+        #validate sell form includes #quantity element with correct attached phrase
+        self.assert_element("#quantity")
+        self.assert_text("Quantity", "#quantity")
+        
+        #validate sell form includes price element with correct attached phrase
+        self.assert_element("#price")
+        self.assert_text("Price", "#price")
+        
+        #validate sell form includes date element with correct attached phrase
+        self.assert_element("#date")
+        self.assert_text("Expiration Date", "#date")
+        
+    #test R3.7
         
