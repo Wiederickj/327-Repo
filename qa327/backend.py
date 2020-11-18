@@ -19,7 +19,6 @@ def get_ticket(owner, name, price):
     ticket = Ticket.query.filter_by(owner=owner, name=name, price=price).first()
     return ticket
 
-
 def login_user(email, password):
     """
     Check user authentication by comparing the password
@@ -51,3 +50,6 @@ def register_user(email, name, password, password2):
     db.session.add(new_user)
     db.session.commit()
     return None
+
+def get_all_tickets():
+    return []
