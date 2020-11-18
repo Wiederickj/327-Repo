@@ -218,7 +218,7 @@ class UserProfilePageTestFrontEnd(BaseCase):
         self.assert_element("#quantity")
         self.assert_text("Quantity", "#quantity")
         
-    #test R3.7
+    #test R3.8
     @patch('qa327.backend.get_user', return_value=new_test_user)
     def test_update_form(self, *_):
         
@@ -258,8 +258,7 @@ class UserProfilePageTestFrontEnd(BaseCase):
         self.assert_element("#date")
         self.assert_text("Expiration Date", "#date")
     """    
-    #test R3.8
-      
+    
     #test R3.9  
     @patch('qa327.backend.get_user', return_value=new_test_user)
     def test_sell_post(self, *_):
