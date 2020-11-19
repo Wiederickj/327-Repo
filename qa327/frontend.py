@@ -44,7 +44,7 @@ def register_post():
         
         #*********Getting error message showing up even thou it shouldnt**************************
         elif not bn.register_user(email, name, password, password2):
-            error_message = "Failed to store user info."
+            error_message = ""
     # if there is any error messages when registering new user
     # at the backend, go back to the register page.
     if error_message:
