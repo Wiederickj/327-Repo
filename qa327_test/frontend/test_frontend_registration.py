@@ -1,3 +1,4 @@
+  
 import pytest
 from seleniumbase import BaseCase
 
@@ -64,12 +65,3 @@ class HomePageTestFrontEnd(BaseCase):
         # make sure that the proper error message shows up
         self.assert_element("#message")
         self.assert_text("login failed", "#message")
-
-
-        
-
-
-        
-
-        
-        
