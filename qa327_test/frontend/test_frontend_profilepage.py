@@ -24,7 +24,7 @@ test_tickets = [
 
 #testing frontend user profile page
 class UserProfilePageTestFrontEnd(BaseCase):
-    """
+    
     #test R3.1
     @patch('qa327.backend.get_user', return_value=new_test_user)
     def test_logged_out(self, *_):
@@ -82,8 +82,7 @@ class UserProfilePageTestFrontEnd(BaseCase):
         #validate test_user balance is shown on page
         self.assert_element("#balance")
         self.assert_text("Your balance is $100", "#balance")
-    """
-    """   
+       
     #test R3.4
     @patch('qa327.backend.get_user', return_value=new_test_user)
     def test_logout_link(self, *_):
@@ -105,8 +104,8 @@ class UserProfilePageTestFrontEnd(BaseCase):
         self.open(base_url)
         
         #click logout
-        self.click('/logout')  
-    """  
+        self.open(base_url + '/logout')  
+      
     #test R3.5
     @patch('qa327.backend.get_user', return_value=new_test_user)
     @patch('qa327.backend.get_all_tickets', return_value=test_tickets)
@@ -130,8 +129,8 @@ class UserProfilePageTestFrontEnd(BaseCase):
         
         #validate all available tickets are shown
         self.assert_element("#tickets div h4")
-        self.assert_text("t1 bob 100 11 20210101", "#tickets div h4")
-    """  
+        self.assert_text("t1 100 11 20210101", "#tickets div h4")
+        
     #test R3.6
     @patch('qa327.backend.get_user', return_value=new_test_user)
     def test_sell_form(self, *_):
@@ -155,22 +154,18 @@ class UserProfilePageTestFrontEnd(BaseCase):
         #validate sell form exists
         self.assert_element("#sell-header")
         self.assert_text("Sell a Ticket!", "#sell-header")
+              
+        #enter ticket name into #sell_name element
+        self.type("#sell_name", "test_frontend1")
         
-        #validate sell form includes #name element with correct attached phrase
-        self.assert_element("#name")
-        self.assert_text("Name", "#name")
+        #enter quantity into #sell_quantity element
+        self.type("#sell_quantity", 10)
         
-        #validate sell form includes #quantity element with correct attached phrase
-        self.assert_element("#quantity")
-        self.assert_text("Quantity", "#quantity")
+        #enter price into #sell_price element
+        self.type("#sell_price", 10)
         
-        #validate sell form includes price element with correct attached phrase
-        self.assert_element("#price")
-        self.assert_text("Price", "#price")
-        
-        #validate sell form includes date element with correct attached phrase
-        self.assert_element("#date")
-        self.assert_text("Expiration Date", "#date")
+        #enter expiration date into #sell_date element
+        self.type("#sell_date", "20210101")
         
     #test R3.7
     @patch('qa327.backend.get_user', return_value=new_test_user)
@@ -196,14 +191,12 @@ class UserProfilePageTestFrontEnd(BaseCase):
         self.assert_element("#buy-header")
         self.assert_text("Buy a Ticket!", "#buy-header")
         
-        #validate buy form includes #name element with correct attached phrase
-        self.assert_element("#name")
-        self.assert_text("Name", "#name")
+        #enter ticket name into #buy_name element
+        self.type("#buy_name", "test_frontend1")
         
-        #validate buy form includes #quantity element with correct attached phrase
-        self.assert_element("#quantity")
-        self.assert_text("Quantity", "#quantity")
-        
+        #enter quantity into #buy_quantity element
+        self.type("#buy_quantity", 10)
+                
     #test R3.8
     @patch('qa327.backend.get_user', return_value=new_test_user)
     def test_update_form(self, *_):
@@ -228,23 +221,18 @@ class UserProfilePageTestFrontEnd(BaseCase):
         self.assert_element("#update-header")
         self.assert_text("Update a Ticket!", "#update-header")
         
-        #validate update form includes #name element with correct attached phrase
-        self.assert_element("#name")
-        self.assert_text("Name", "#name")
+        #enter ticket name into #update_name element
+        self.type("#update_name", "test_frontend1")
         
-        #validate update form includes #quantity element with correct attached phrase
-        self.assert_element("#quantity")
-        self.assert_text("Quantity", "#quantity")
+        #enter quantity into #update_quantity element
+        self.type("#update_quantity", 10)
         
-        #validate update form includes price element with correct attached phrase
-        self.assert_element("#price")
-        self.assert_text("Price", "#price")
+        #enter price into #update_price element
+        self.type("#update_price", 10)
         
-        #validate update form includes date element with correct attached phrase
-        self.assert_element("#date")
-        self.assert_text("Expiration Date", "#date")
-    """ 
-    """
+        #enter expiration date into #update_date element
+        self.type("#update_date", "20210101")
+    
     #test R3.9  
     @patch('qa327.backend.get_user', return_value=new_test_user)
     def test_sell_post(self, *_):
@@ -343,4 +331,4 @@ class UserProfilePageTestFrontEnd(BaseCase):
         
         #click update button
         self.click('input[value="update"]')    
-    """
+   
