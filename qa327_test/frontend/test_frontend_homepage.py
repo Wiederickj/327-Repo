@@ -104,7 +104,10 @@ class UserProfilePageTestFrontEnd(BaseCase):
         self.open(base_url)
         
         #click logout
-        self.open(base_url + '/logout')  
+        self.open(base_url + '/logout')
+
+        #login page opens
+        self.open(base_url + '/login')
       
     #test R3.5
     @patch('qa327.backend.get_user', return_value=new_test_user)
