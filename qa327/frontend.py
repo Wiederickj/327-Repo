@@ -16,7 +16,6 @@ def register_get():
     # templates are stored in the templates folder
     return render_template('register.html', message='')
 
-
 @app.route('/register', methods=['POST'])
 def register_post():
     email = request.form.get('email')

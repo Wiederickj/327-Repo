@@ -18,23 +18,9 @@ new_test_user = User(
     balance=100
 )
 
-#sample ticket 1
-new_test_ticket_1 = Ticket(
-    owner = 'test_frontend1@test.com',
-    name='test_frontend1',
-    quantity = 10,
-    price = 10,
-    date = '20210101'
-)
-
-#sample ticket 2
-new_test_ticket_2 = Ticket(
-    owner = 'test_frontend2@test.com',
-    name='test_frontend2',
-    quantity = 15,
-    price = 15,
-    date = '20210202'
-)
+test_tickets = [
+    {'name': 't1', 'owner': 'bob', 'price': '100', 'quantity': '11', 'date': '20210101'}
+]
 
 #testing frontend user profile page
 class UserProfilePageTestFrontEnd(BaseCase):
@@ -48,7 +34,7 @@ class UserProfilePageTestFrontEnd(BaseCase):
         
         #login page opens
         self.open(base_url + '/login')
-    """"""    
+       
     #test R3.2
     @patch('qa327.backend.get_user', return_value=new_test_user)
     def test_hi_header(self, *_):
@@ -72,7 +58,7 @@ class UserProfilePageTestFrontEnd(BaseCase):
         #validate  welcome-header element exists and outputs correct phrase
         self.assert_element("#welcome-header")
         self.assert_text("Hi test_frontend", "#welcome-header")
-    """"""    
+    
     #test R3.3
     @patch('qa327.backend.get_user', return_value=new_test_user)
     def test_user_balance(self, *_):
@@ -96,7 +82,8 @@ class UserProfilePageTestFrontEnd(BaseCase):
         #validate test_user balance is shown on page
         self.assert_element("#balance")
         self.assert_text("Your balance is $100", "#balance")
-    """"""   
+    """
+    """   
     #test R3.4
     @patch('qa327.backend.get_user', return_value=new_test_user)
     def test_logout_link(self, *_):
@@ -122,7 +109,7 @@ class UserProfilePageTestFrontEnd(BaseCase):
     """  
     #test R3.5
     @patch('qa327.backend.get_user', return_value=new_test_user)
-    @patch('qa327.backend.get_ticket', return_value=new_test_ticket_1)
+    @patch('qa327.backend.get_all_tickets', return_value=test_tickets)
     def test_available_tickets(self, *_):
         
         # open /logout to invalidate any current logged in sessions
@@ -143,8 +130,8 @@ class UserProfilePageTestFrontEnd(BaseCase):
         
         #validate all available tickets are shown
         self.assert_element("#tickets div h4")
-        self.assert_text("test_frontend1 10", "#tickets div h4")
-    """    
+        self.assert_text("t1 bob 100 11 20210101", "#tickets div h4")
+    """  
     #test R3.6
     @patch('qa327.backend.get_user', return_value=new_test_user)
     def test_sell_form(self, *_):
@@ -256,7 +243,7 @@ class UserProfilePageTestFrontEnd(BaseCase):
         #validate update form includes date element with correct attached phrase
         self.assert_element("#date")
         self.assert_text("Expiration Date", "#date")
-    """    
+    """ 
     """
     #test R3.9  
     @patch('qa327.backend.get_user', return_value=new_test_user)
@@ -321,7 +308,7 @@ class UserProfilePageTestFrontEnd(BaseCase):
         
         #click buy button
         self.click('input[value="buy"]')
-        
+   
     #test R3.11
     @patch('qa327.backend.get_user', return_value=new_test_user)
     def test_update_post(self, *_):
@@ -355,5 +342,5 @@ class UserProfilePageTestFrontEnd(BaseCase):
         self.type("#update_date", "20210101")
         
         #click update button
-        self.click('input[value="update"]')
+        self.click('input[value="update"]')    
     """
