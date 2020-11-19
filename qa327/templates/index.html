@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-<h2 id="welcome-header">Welcome {{ user.name }} !</h2>
+<h2 id="welcome-header">Hi {{ user.name }}</h2>
 
 <a href='/logout'>logout</a>
 
@@ -16,34 +16,55 @@
 <div id="tickets">
 {% for ticket in tickets %}
     <div>
-        <h4>{{ ticket.name }} {{ ticket.price }}</h4>
+        <h4>{{ ticket.name }} {{ ticket.price }} {{ticket.quantity}} {{ticket.date}}</h4>
     </div>
 {% endfor %}
 </div>
-<br/>
-<h2>Add a new ticket to sell:</h2>
-<form id="add-ticket" action="/sell" method="POST">
-    Name: <input type="text" name="name"/><br/>
-    Number of tickets: <input type="number" name="quantity"/><br/>
-    Price: <input type="number" name="price"/><br/>
-    Sale Ends: <input type="date" name="expiration"/><br/>
-    <input type="submit"/>
+
+<h2 id = "sell-header">Sell a Ticket!</h2>
+<h4 id='sell_message'>{{message}}</h4>
+<form method="post">
+  <div class="form-group">
+    <label for="sell_name">Name</label>
+    <input class="form-control" name="sell_name" id="sell_name" required>
+    <label for="sell_quantity">Quantity</label>
+    <input class="form-control" name="sell_quantity" id="sell_quantity" required>
+    <label for="sell_price">Price</label>
+    <input class="form-control" name="sell_price" id="sell_price" required>
+    <label for="sell_date">Expiration Date</label>
+    <input class="form-control" name="sell_date" id="sell_date" required>
+    <input class="btn btn-primary" type="submit" value="sell">
+  </div>
 </form>
-<br/>
-<h2>Purchase tickets:</h2>
-<form id="add-ticket" action="/buy" method="POST">
-    Name: <input type="text" name="name"/><br/>
-    Number of tickets: <input type="number" name="quantity"/><br/>
-    <input type="submit"/>
+<br>
+
+<h2 id = "buy-header">Buy a Ticket!</h2>
+<h4 id='buy_message'>{{message}}</h4>
+<form method="post">
+  <div class="form-group">
+    <label for="buy_name">Name</label>
+    <input class="form-control" name="buy_name" id="buy_name" required>
+    <label for="buy_quantitiy">Quanitity</label>
+    <input class="form-control" name="buy_quantity" id="buy_quantity" required>
+    <input class="btn btn-primary" type="submit" value="buy">
+  </div>
 </form>
-<br/>
-<h2>Ticket Editor:</h2>
-<form id="add-ticket" action="/update" method="POST">
-    Name: <input type="text" name="name"/><br/>
-    Number of tickets: <input type="number" name="quantity"/><br/>
-    Price: <input type="number" name="price"/><br/>
-    Sale Ends: <input type="date" name="expiration"/><br/>
-    <input type="submit"/>
+<br>
+
+<h2 id = "update-header">Update a Ticket!</h2>
+<h4 id='update_message'>{{message}}</h4>
+<form method="post">
+  <div class="form-group">
+    <label for="update_name">Name</label>
+    <input class="form-control" name="update_name" id="update_name" required>
+    <label for="update_quantitiy">Quanitity</label>
+    <input class="form-control" name="update_quantity" id="update_quantity" required>
+    <label for="update_price">Price</label>
+    <input class="form-control" name="update_price" id="update_price" required>
+    <label for="update_date">Expiration Date</label>
+    <input class="form-control" name="update_date" id="update_date" required>
+    <input class="btn btn-primary" type="submit" value="update">
+  </div>
 </form>
 
 {% endblock %}
