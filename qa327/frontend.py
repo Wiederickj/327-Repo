@@ -24,6 +24,7 @@ def register_post():
     password = request.form.get('password')
     password2 = request.form.get('password2')
     error_message = None
+    
 
 
     if password != password2:
@@ -70,7 +71,7 @@ def check_empty_fields(field):
 def is_valid_user(name):
     #Returns the boolean for valid 
     #:param user: the user in question
-    INVALID_USER = (len(name) < 2 or len(name) >20)
+    INVALID_USER = (len(name) < 2 or len(name) >20) or re.match(r".*[*^+&@!#$%]", name) or name.startswith(' ')
     return False if INVALID_USER else True
 
 
