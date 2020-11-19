@@ -11,3 +11,5 @@ Simple test case for server connection
 def test_server_is_live():
     r = requests.get(base_url)
     assert r.status_code == 200
+
+
