@@ -38,7 +38,7 @@ new_test_ticket_2 = Ticket(
 
 #testing frontend user profile page
 class UserProfilePageTestFrontEnd(BaseCase):
-    
+    """
     #test R3.1
     @patch('qa327.backend.get_user', return_value=new_test_user)
     def test_logged_out(self, *_):
@@ -48,7 +48,7 @@ class UserProfilePageTestFrontEnd(BaseCase):
         
         #login page opens
         self.open(base_url + '/login')
-        
+    """"""    
     #test R3.2
     @patch('qa327.backend.get_user', return_value=new_test_user)
     def test_hi_header(self, *_):
@@ -72,7 +72,7 @@ class UserProfilePageTestFrontEnd(BaseCase):
         #validate  welcome-header element exists and outputs correct phrase
         self.assert_element("#welcome-header")
         self.assert_text("Hi test_frontend", "#welcome-header")
-        
+    """"""    
     #test R3.3
     @patch('qa327.backend.get_user', return_value=new_test_user)
     def test_user_balance(self, *_):
@@ -96,7 +96,7 @@ class UserProfilePageTestFrontEnd(BaseCase):
         #validate test_user balance is shown on page
         self.assert_element("#balance")
         self.assert_text("Your balance is $100", "#balance")
-    """   
+    """"""   
     #test R3.4
     @patch('qa327.backend.get_user', return_value=new_test_user)
     def test_logout_link(self, *_):
@@ -117,10 +117,9 @@ class UserProfilePageTestFrontEnd(BaseCase):
         # open user profile page
         self.open(base_url)
         
-        #validate logout link exists
-        self.assert_element("#/logout")
-        self.assert_text("logout", "#/logout")
-     """"""   
+        #click logout
+        self.click('/logout')  
+    """  
     #test R3.5
     @patch('qa327.backend.get_user', return_value=new_test_user)
     @patch('qa327.backend.get_ticket', return_value=new_test_ticket_1)
@@ -145,7 +144,7 @@ class UserProfilePageTestFrontEnd(BaseCase):
         #validate all available tickets are shown
         self.assert_element("#tickets div h4")
         self.assert_text("test_frontend1 10", "#tickets div h4")
-    """"""    
+    """    
     #test R3.6
     @patch('qa327.backend.get_user', return_value=new_test_user)
     def test_sell_form(self, *_):
@@ -258,7 +257,7 @@ class UserProfilePageTestFrontEnd(BaseCase):
         self.assert_element("#date")
         self.assert_text("Expiration Date", "#date")
     """    
-    
+    """
     #test R3.9  
     @patch('qa327.backend.get_user', return_value=new_test_user)
     def test_sell_post(self, *_):
@@ -357,3 +356,4 @@ class UserProfilePageTestFrontEnd(BaseCase):
         
         #click update button
         self.click('input[value="update"]')
+    """
