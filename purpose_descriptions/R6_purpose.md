@@ -1,0 +1,13 @@
+| Specification                                                                              | Test ID | Purpose                                                                                      |
+|--------------------------------------------------------------------------------------------|---------|----------------------------------------------------------------------------------------------|
+| Name of ticket is alphanumeric-only and space allowed only if not first or last character  | R6.1.1  | Check if buying action succeeds if given proper ticket name                                  |
+| Name of ticket is not alphanumeric-only and/or space is the first and/or last character    | R6.1.2  | Check if buying action fails if given improper ticket name                                   |
+| Name of ticket is not longer than 60 characters                                            | R6.2.1  | Check if buying actions succeeds if given proper ticket name length                          |
+| Name of ticket is longer than 60 characters                                                | R6.2.2  | Check if buying actions fails if given improper ticket name length                           |
+| Quantity of tickets is more than 0, less than or equal to 100                              | R6.3.1  | Check if buying actions succeeds if given proper ticket quantity                             |
+| Quantity of tickets is less than or equal to 0, more than 100                              | R6.3.2  | Check if buying actions fails if given improper ticket quantity                              |
+| Ticket name exists and quantity is more than quantity to buy                               | R6.4.1  | Check if buying actions succeeds if Name exists and enough tickets available                 |
+| Ticket name does not exists and/or the quantity is less than quantity to buy               | R6.4.2  | Check if buying actions fails if name does not exists and/or not enough tickets              |
+| User has more balance than the ticket price *quantity + service fee(35%) + tax (5%)        | R6.5.1  | Check if buying actions succeeds if User balance is more than or equal to Ticket total price |
+| User has less balance than the ticket price *quantity + service fee(35%) + tax (5%)        | R6.5.2  | Check if buying actions fails if User balance is less than ticket total price                |
+|                                                                                            |         |                                                                                              |
