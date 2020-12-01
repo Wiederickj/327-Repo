@@ -3,6 +3,7 @@ from qa327 import app
 import qa327.backend as bn
 import datetime
 import re
+import datetime
 
 """
 This file defines the front-end part of the service.
@@ -219,6 +220,7 @@ def is_valid_ticket_date(date):
     
 #updating existing ticket using update form on user profile page    
 @app.route('/', methods=['POST'])
+#@authenticate
 def update_post():
     #extract contents of the update form
     name = request.form.get('update_name')
@@ -239,7 +241,7 @@ def update_post():
         error_message = 'invalid ticket name'
         
     #check ticket quantity is greater than 0 and less or equal to 100
-    if is_valid_ticket_quanitity(quantity) == False:
+    if is_valid_ticket_quantity(quantity) == False:
         error_message = 'invalid ticket quantity'
        
     #check ticket price is in the range 10 to 100 (including 10 and 100)
@@ -247,13 +249,15 @@ def update_post():
         error_message = 'invalid ticket price'
         
     #check that date format is YYYYMMDD
+    if is_valid_ticket_date(date) == False:
+        error_message = 'invalid ticket date'
         
     #save ticket to database
     ticket = bn.store_ticket(name=name, price=price, quantity=quantity, date=date)
     
     #if theres an error message, output that message. Otherwise, post and redirect to user profile page
     if error_message:
-        return render_template('index.html', update_message=error_message)
+        return render_template('index.html', update_message=error_message, user=user)
     else:
         return redirect('/')
     

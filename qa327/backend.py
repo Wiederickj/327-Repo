@@ -15,6 +15,10 @@ def get_user(email):
     """
     user = User.query.filter_by(email=email).first()
     return user
+
+
+    
+#store ticket in backend    
 def store_ticket(name, price, quantity, date):
     new_ticket = Ticket(name=name, price=price, quantity=quantity, date=date)
     
@@ -22,10 +26,12 @@ def store_ticket(name, price, quantity, date):
     db.session.commit()
     return None
   
+#get a ticket already stored in backend
 def get_ticket(name):
     ticket = Ticket.query.filter_by(name=name).first()
     return ticket
     
+#get all tickets    
 def get_all_tickets():
     tickets = Ticket.query.all()
     return tickets
