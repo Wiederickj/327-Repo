@@ -278,6 +278,9 @@ def sellticket():
     ticket = bn.get_ticket(name=name)
     if not ticket:
         message = 'no such ticket exists'
+    #check that the ticket name is alphanumeric only, space allowed only if not first or last character, and contains less than 60 chars
+    if is_valid_ticket_name(str(name)) == False:
+        message = 'invalid ticket name'
     # check quantity
     if not is_valid_ticket_quanitity(quantity):
         message = "Ticket quantity must be between 0 and 100."
