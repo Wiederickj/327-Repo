@@ -1,5 +1,6 @@
 from qa327.models import db, User, Ticket
 from werkzeug.security import generate_password_hash, check_password_hash
+import decimal 
 
 """
 This file defines all backend logic that interacts with database and other services
@@ -14,7 +15,6 @@ def get_user(email):
     """
     user = User.query.filter_by(email=email).first()
     return user
-    
 def store_ticket(name, price, quantity, date):
     new_ticket = Ticket(name=name, price=price, quantity=quantity, date=date)
     
@@ -29,6 +29,7 @@ def get_ticket(name):
 def get_all_tickets():
     tickets = Ticket.query.all()
     return tickets
+
 
 def login_user(email, password):
     """
@@ -57,7 +58,31 @@ def register_user(email, name, password, password2):
     hashed_pw = generate_password_hash(password, method='sha256')
     # store the encrypted password rather than the plain password
     new_user = User(email=email, name=name, password=hashed_pw)
-
     db.session.add(new_user)
     db.session.commit()
     return None
+
+
+
+def get_ticket(ticket_id):
+    ticket = Ticket.query.filter_by(id=ticket_id).first()
+    return ticket
+
+
+#Added in Sell_Ticket Function for the backend
+def sell_ticket(name, quantity, price, date, user):
+    ticket = Ticket()
+    ticket.name = name
+    ticket.quantity = quantity
+    ticket.price = price
+    ticket.date = date
+    ticket.user = user
+    db.session.add(ticket)
+    db.session.commit()
+
+#added in get all tickets to show all aviable tickets on the site
+def get_all_tickets():
+    tickets = Ticket.query.all()
+    return tickets
+
+
