@@ -10,7 +10,6 @@ http requests from the client (browser) through templating.
 The html templates are stored in the 'templates' folder. 
 """
 
-
 @app.route('/register', methods=['GET'])
 def register_get():
     # templates are stored in the templates folder
@@ -24,8 +23,6 @@ def register_post():
     password2 = request.form.get('password2')
     error_message = None
     
-
-
     if password != password2:
         error_message = "The passwords do not match"
 
@@ -112,7 +109,6 @@ def is_valid_password(password):
 def login_post():
     email = request.form.get('email')
     password = request.form.get('password')
-    #name = request.form.get('name')
     
     # Re render login page with error message 
     # if pwd field is empty or wrong format
@@ -179,7 +175,7 @@ def authenticate(inner_function):
     # return the wrapped version of the inner_function:
     return wrapped_inner
 
-
+#user profile page
 @app.route('/')
 @authenticate
 def profile(user):
@@ -190,7 +186,96 @@ def profile(user):
     # front-end portals
     tickets = bn.get_all_tickets()
     return render_template('index.html', user=user, tickets=tickets)
+    
+#updating existing ticket using update form on user profile page    
+@app.route('/', methods=['POST'])
+def update_post():
+    #extract contents of the update form
+    name = request.form.get('update_name')
+    price = request.form.get('update_price')
+    quantity = request.form.get('update_quantity')
+    date = request.form.get('update_date')
+    
+    #initialize error message to be empty
+    error_message = None
+    
+    #check that the given ticket name exists in the database
+    ticket = bn.get_ticket(name=name)
+    if not ticket:
+        error_message = 'no such ticket exists'
+        
+    #check that the ticket name is alphanumeric only, space allowed only if not first or last character, and contains less than 60 chars
+    if is_valid_ticket_name(str(name)) == False:
+        error_message = 'invalid ticket name'
+        
+    #check ticket quantity is greater than 0 and less or equal to 100
+    if is_valid_ticket_quanitity(quantity) == False:
+        error_message = 'invalid ticket quantity'
+       
+    #check ticket price is in the range 10 to 100 (including 10 and 100)
+    if is_valid_ticket_price(price) == False:
+        error_message = 'invalid ticket price'
+        
+    #check that date format is YYYYMMDD
+        
+    #save ticket to database
+    ticket = bn.store_ticket(name=name, price=price, quantity=quantity, date=date)
+    
+    #if theres an error message, output that message. Otherwise, post and redirect to user profile page
+    if error_message:
+        return render_template('index.html', update_message=error_message)
+    else:
+        return redirect('/')
+    
+#selling a ticket using sell form on user profile page
+@app.route('/', methods=['POST'])
+def sell_post():
+    #extract contents of the sell form
+    name = request.form.get('sell_name')
+    price = request.form.get('sell_price')
+    quantity = request.form.get('sell_quantity')
+    date = request.form.get('sell_date')
+    
+    #initialize error message to be empty
+    error_message = None
+    
+    #save ticket to database
+    ticket = bn.store_ticket(name=name, price=price, quantity=quantity, date=date)
+    
+    #redirect to user profile page after submission
+    return redirect('/')
 
+#buying a ticket using buy form on user profile page
+@app.route('/', methods=['POST'])
+def buy_post():
+    #extract contents of buy form
+    name = request.form.get('buy_name')
+    quantity = request.form.get('buy_quantity')
+    
+    #initialize error message to be empty
+    error_message = None
+    
+#assesses whether or not the ticket name is valid    
+def is_valid_ticket_name(name):
+    #check if ticket name has non-alphanumeric characters, starts with a space, ends with a space, is longer than 60 characters
+    invalid_ticket_name = re.match(r".*[*^+&@!#$%]", name) or name.startswith(' ') or name.endswith(' ') or (len(name) > 60)
+    return False if invalid_ticket_name else True
+    
+#assesses whether or not the ticket quantity is within the acceptable range
+def is_valid_ticket_quanitity(quantity):
+    #check if ticket quantity falls in accceptable quantity range
+    invalid_ticket_quantity = (int(quantity) < 1) or (int(quantity) > 101)
+    return False if invalid_ticket_quantity else True
+    
+#assesses whether or not the ticket price is valid    
+def is_valid_ticket_price(price):
+    #check if ticket price falls in accceptable price range
+    invalid_ticket_price = (int(price) < 10) or (int(price) > 100)
+    return False if invalid_ticket_price else True
+    
+#assesses whether or not the ticket date matches the proper format
+def is_valid_ticket_date(date):
+    return True if ticket_date > datetime.datetime.now() else False
 
 #Added 404 Error Handler
 @app.errorhandler(404)

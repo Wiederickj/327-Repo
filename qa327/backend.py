@@ -15,16 +15,20 @@ def get_user(email):
     user = User.query.filter_by(email=email).first()
     return user
     
-def store_ticket(owner, name, price, quantity, date):
-    new_ticket = Ticket(owner=owner, name=name, price=price, quantity=quantity, date=date)
+def store_ticket(name, price, quantity, date):
+    new_ticket = Ticket(name=name, price=price, quantity=quantity, date=date)
     
     db.session.add(new_ticket)
     db.session.commit()
     return None
   
-def get_ticket(owner):
-    ticket = Ticket.query.filter_by(owner=owner).first()
+def get_ticket(name):
+    ticket = Ticket.query.filter_by(name=name).first()
     return ticket
+    
+def get_all_tickets():
+    tickets = Ticket.query.all()
+    return tickets
 
 def login_user(email, password):
     """
@@ -57,6 +61,3 @@ def register_user(email, name, password, password2):
     db.session.add(new_user)
     db.session.commit()
     return None
-
-def get_all_tickets():
-    return []
