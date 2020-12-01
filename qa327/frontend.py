@@ -3,6 +3,7 @@ from qa327 import app
 import qa327.backend as bn
 import re
 import datetime
+
 """
 This file defines the front-end part of the service.
 It elaborates how the services should handle different
@@ -189,6 +190,7 @@ def profile(user):
     
 #updating existing ticket using update form on user profile page    
 @app.route('/', methods=['POST'])
+#@authenticate
 def update_post():
     #extract contents of the update form
     name = request.form.get('update_name')
@@ -209,7 +211,7 @@ def update_post():
         error_message = 'invalid ticket name'
         
     #check ticket quantity is greater than 0 and less or equal to 100
-    if is_valid_ticket_quanitity(quantity) == False:
+    if is_valid_ticket_quantity(quantity) == False:
         error_message = 'invalid ticket quantity'
        
     #check ticket price is in the range 10 to 100 (including 10 and 100)
@@ -217,6 +219,7 @@ def update_post():
         error_message = 'invalid ticket price'
         
     #check that date format is YYYYMMDD
+
     #Date must be given in the format YYYYMMDD (e.g. 20200901)
 def is_ticket_date_valid(ticket_date):
     return True if ticket_date > datetime.datetime.now() else False
@@ -224,12 +227,16 @@ def get_all_tickets():
     tickets = Ticket.query.all()
     return tickets
     
+
+    if is_valid_ticket_date(date) == False:
+        error_message = 'invalid ticket date'
+        
     #save ticket to database
     ticket = bn.store_ticket(name=name, price=price, quantity=quantity, date=date)
     
     #if theres an error message, output that message. Otherwise, post and redirect to user profile page
     if error_message:
-        return render_template('index.html', update_message=error_message)
+        return render_template('index.html', update_message=error_message, user=user)
     else:
         return redirect('/')
     
@@ -260,6 +267,7 @@ def buy_post():
     sell_quantity = request.form.get('sell_quantity')
     user_balance = request.form.get('balance')
     #initialize error message to be empty
+
     error_message = None
 
      #check that the ticket name is alphanumeric only, space allowed only if not first or last character, and contains less than 60 chars
@@ -277,6 +285,9 @@ def buy_post():
     #check if quantity to buy is less than quantity available
     if is_valid_ticket_availability(buy_quantity, sell_quantity) == False:
         error_message = 'not enough tickets'
+
+    error_message = None   
+
     
     #check if user has enough balance to purchase tickets
     if is_valid_balance(balance, price, buy_quantity) == False:
@@ -289,7 +300,7 @@ def is_valid_ticket_name(name):
     return False if invalid_ticket_name else True
     
 #assesses whether or not the ticket quantity is within the acceptable range
-def is_valid_ticket_quanitity(quantity):
+def is_valid_ticket_quantity(quantity):
     #check if ticket quantity falls in accceptable quantity range
     invalid_ticket_quantity = (int(quantity) < 1) or (int(quantity) > 101)
     return False if invalid_ticket_quantity else True
@@ -302,7 +313,14 @@ def is_valid_ticket_price(price):
     
 #assesses whether or not the ticket date matches the proper format
 def is_valid_ticket_date(date):
-    return True if ticket_date > datetime.datetime.now() else False
+    return True if datetime.datetime.strptime(date,'%Y%m%d') > datetime.datetime.now() else False
+    
+#get user balance    
+def get_user_balance(email):
+    #start by finding the user 
+    user = bn.get_user(email)
+    balance = user.balance
+    return balance
 
 #assesses whether or not there are enough tickets to sell
 def is_valid_ticket_availability(buy_quantity, sell_quantity):
