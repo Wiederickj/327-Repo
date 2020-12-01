@@ -215,7 +215,7 @@ def is_valid_ticket_price(price):
     
 #assesses whether or not the ticket date matches the proper format
 def is_valid_ticket_date(date):
-    return True if ticket_date > datetime.datetime.now() else False
+    return True if date > datetime.datetime.now() else False
     
 #updating existing ticket using update form on user profile page    
 @app.route('/', methods=['POST'])
