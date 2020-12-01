@@ -2,7 +2,7 @@ from flask import render_template, request, session, redirect
 from qa327 import app
 import qa327.backend as bn
 import re
-
+import datetime
 """
 This file defines the front-end part of the service.
 It elaborates how the services should handle different
@@ -217,7 +217,13 @@ def update_post():
         error_message = 'invalid ticket price'
         
     #check that date format is YYYYMMDD
-        
+    #Date must be given in the format YYYYMMDD (e.g. 20200901)
+def is_ticket_date_valid(ticket_date):
+    return True if ticket_date > datetime.datetime.now() else False
+def get_all_tickets():
+    tickets = Ticket.query.all()
+    return tickets
+    
     #save ticket to database
     ticket = bn.store_ticket(name=name, price=price, quantity=quantity, date=date)
     
@@ -250,11 +256,32 @@ def sell_post():
 def buy_post():
     #extract contents of buy form
     name = request.form.get('buy_name')
-    quantity = request.form.get('buy_quantity')
-    
+    buy_quantity = request.form.get('buy_quantity')
+    sell_quantity = request.form.get('sell_quantity')
+    user_balance = request.form.get('balance')
     #initialize error message to be empty
     error_message = None
+
+     #check that the ticket name is alphanumeric only, space allowed only if not first or last character, and contains less than 60 chars
+    if is_valid_ticket_name(str(name)) == False:
+        error_message = 'invalid ticket name'
+        
+    #check ticket quantity is greater than 0 and less or equal to 100
+    if is_valid_ticket_quanitity(quantity) == False:
+        error_message = 'invalid ticket quantity'
+       
+    #check ticket price is in the range 10 to 100 (including 10 and 100)
+    if is_valid_ticket_price(price) == False:
+        error_message = 'invalid ticket price'
     
+    #check if quantity to buy is less than quantity available
+    if is_valid_ticket_availability(buy_quantity, sell_quantity) == False:
+        error_message = 'not enough tickets'
+    
+    #check if user has enough balance to purchase tickets
+    if is_valid_balance(balance, price, buy_quantity) == False:
+        error_message = 'not enough funds'
+
 #assesses whether or not the ticket name is valid    
 def is_valid_ticket_name(name):
     #check if ticket name has non-alphanumeric characters, starts with a space, ends with a space, is longer than 60 characters
@@ -276,6 +303,14 @@ def is_valid_ticket_price(price):
 #assesses whether or not the ticket date matches the proper format
 def is_valid_ticket_date(date):
     return True if ticket_date > datetime.datetime.now() else False
+
+#assesses whether or not there are enough tickets to sell
+def is_valid_ticket_availability(buy_quantity, sell_quantity):
+    return False if ticket_buy > quantity else True
+
+#assesses whether or not there are enough funds in user account
+def is_valid_balance(balance, price, buy_quantity):
+    return False if balance < (price * buy_quantity * 1.4) else True
 
 #Added 404 Error Handler
 @app.errorhandler(404)
