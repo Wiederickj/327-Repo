@@ -1,6 +1,7 @@
 from flask import render_template, request, session, redirect
 from qa327 import app
 import qa327.backend as bn
+import datetime
 import re
 
 """
@@ -79,6 +80,9 @@ def is_valid_email(email):
     INVALID_EMAIL = (len(email) < 1 or \
         not re.match(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$", email))
     return False if INVALID_EMAIL else True
+
+def is_ticket_date_valid(ticket_date):
+    return ticket_date > datetime.datetime.now()
 
 
 def is_valid_password(password):
@@ -230,20 +234,35 @@ def update_post():
 #selling a ticket using sell form on user profile page
 @app.route('/', methods=['POST'])
 def sell_post():
-    #extract contents of the sell form
-    name = request.form.get('sell_name')
-    price = request.form.get('sell_price')
-    quantity = request.form.get('sell_quantity')
-    date = request.form.get('sell_date')
-    
-    #initialize error message to be empty
-    error_message = None
-    
-    #save ticket to database
-    ticket = bn.store_ticket(name=name, price=price, quantity=quantity, date=date)
-    
-    #redirect to user profile page after submission
-    return redirect('/')
+    ticket_name = request.form['name']
+    ticket_quantity = int(request.form['quantity'])
+    ticket_price = float(request.form['price'])
+    ticket_date = request.form['date']
+    ticket_date = datetime.datetime.strptime(ticket_date, '%Y-%m-%d')
+    user_email = request.form['user']
+    user = bn.get_user(user_email)
+
+    message = ""
+
+    # check name
+    if not is_valid_ticket_name(ticket_name):
+        message = "Ticket name is invalid."
+    # check quantity
+    if not is_valid_ticket_quanitity(ticket_quantity):
+        message = "Ticket quantity must be between 0 and 100."
+    # check price
+    if not is_valid_ticket_price(ticket_price):
+        message = "Ticket price is invalid."
+    # check date
+    if not is_ticket_date_valid(ticket_date):
+        message = "Ticket date is invalid."
+
+    if not message: # if message is empty, indicating no validation errors
+        message = "Ticket created successfully."
+        bn.sell_ticket(ticket_name, ticket_quantity, ticket_price, ticket_date, user.id)
+
+    # redirect user to profile page with result message
+    return redirect("/?message={}".format(message))
 
 #buying a ticket using buy form on user profile page
 @app.route('/', methods=['POST'])

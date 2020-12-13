@@ -61,3 +61,25 @@ def register_user(email, name, password, password2):
     db.session.add(new_user)
     db.session.commit()
     return None
+
+#Tests for sell ticket
+
+def sell_ticket(name, quantity, price, date, user):
+    """
+    Create new ticket in the database
+    :param ticket_id: the id of the ticket to be updated
+    :param name: the name of the ticket
+    :param quantity: the amount of tickets for sale
+    :param price: the price of the ticket
+    :param date: the expiry date of the ticket
+    :param user: seller of the ticket
+    :return: an error message if there is any, or None if creation succeeds
+    """
+    ticket = Ticket()
+    ticket.name = name
+    ticket.quantity = quantity
+    ticket.price = price
+    ticket.date = date
+    ticket.user = user
+    db.session.add(ticket)
+    db.session.commit()
