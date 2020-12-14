@@ -1,4 +1,5 @@
 from qa327.models import db, User, Ticket
+import decimal
 from werkzeug.security import generate_password_hash, check_password_hash
 
 """
@@ -62,19 +63,8 @@ def register_user(email, name, password, password2):
     db.session.commit()
     return None
 
-#Tests for sell ticket
-
-def sell_ticket(name, quantity, price, date, user):
-    """
-    Create new ticket in the database
-    :param ticket_id: the id of the ticket to be updated
-    :param name: the name of the ticket
-    :param quantity: the amount of tickets for sale
-    :param price: the price of the ticket
-    :param date: the expiry date of the ticket
-    :param user: seller of the ticket
-    :return: an error message if there is any, or None if creation succeeds
-    """
+#Test to see updated ticket price
+def update_ticekt(name, quantity, price, date, user):
     ticket = Ticket()
     ticket.name = name
     ticket.quantity = quantity
@@ -82,4 +72,26 @@ def sell_ticket(name, quantity, price, date, user):
     ticket.date = date
     ticket.user = user
     db.session.add(ticket)
+    db.session.sell(ticket)
+    db.session.commit()
+
+#Tests for selling a ticket
+def sell_ticket(name, quantity, price, date, user):
+#Used to test the sell ticket function
+    ticket = Ticket()
+    ticket.name = name
+    ticket.quantity = quantity
+    ticket.price = price
+    ticket.date = date
+    ticket.user = user
+    db.session.add(ticket)
+    db.session.commit()
+
+#Used to test buying ticket function
+def buy_ticket(ticket_id, buyer_id):
+    ticket = get_ticket(ticket_id)
+    buyer = get_user(buyer_id)
+    ticket.user = buyer.id
+    buyer.balance -= ticket.price*decimal.Decimal("1.30")*decimal.Decimal("1.00")
+    Ticket.query.filter_by(id=int(ticket_id)).delete()
     db.session.commit()

@@ -3,6 +3,7 @@ from qa327 import app
 import qa327.backend as bn
 import datetime
 import re
+import decimal
 
 """
 This file defines the front-end part of the service.

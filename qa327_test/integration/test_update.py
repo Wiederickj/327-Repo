@@ -3,11 +3,8 @@ from seleniumbase import BaseCase
 
 from qa327_test.conftest import base_url
 
-# Testing the whole system (frontend+backend)
-
 @pytest.mark.usefixtures('server')
-class SellTicket(BaseCase):
-#Create new user
+class UpdateTicket(BaseCase):
     def register(self):
         self.open(base_url + '/register')
         self.type("#email", "test_integration@test.com")
@@ -29,14 +26,14 @@ class SellTicket(BaseCase):
         self.type("#sell_price", "150")
         self.type("#sell_exp_date", "2077\t11-15")
         self.click("#sell_submit")
-#Sell the ticket and run tests
-    def test_sell_ticket(self):
+#test if ticket price is updated
+    def test_Update_ticket_for_sale(self):
       self.register()
       self.login()
       self.sell_ticket()
       self.open(base_url + "/")
       self.assert_element("#ticket-HockeyStick")
-      self.assert_text("Hockey Stick", "#ticket-HockeyStick-name")
+      self.assert_text("HockeyStick", "#ticket-HockeyStick-name")
       self.assert_text("1", "#ticket-HockeyStick-quantity")
       self.assert_text("150", "#ticket-HockeyStick-price")
       self.assert_text("2077-11-15", "#ticket-HockeyStick-date")
