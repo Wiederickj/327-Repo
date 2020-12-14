@@ -3,7 +3,7 @@ from qa327 import app
 import qa327.backend as bn
 import datetime
 import re
-import datetime
+import decimal
 
 """
 This file defines the front-end part of the service.
@@ -11,7 +11,6 @@ It elaborates how the services should handle different
 http requests from the client (browser) through templating.
 The html templates are stored in the 'templates' folder. 
 """
-# REGISTER METHODS
 
 @app.route('/register', methods=['GET'])
 def register_get():
@@ -52,8 +51,6 @@ def register_post():
         return redirect('/login')
 
 
-# LOGIN METHODS
-
 @app.route('/login', methods=['GET'])
 def login_get():
     return render_template('login.html', message='Please login')
@@ -84,6 +81,9 @@ def is_valid_email(email):
     INVALID_EMAIL = (len(email) < 1 or \
         not re.match(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$", email))
     return False if INVALID_EMAIL else True
+
+def is_ticket_date_valid(ticket_date):
+    return ticket_date > datetime.datetime.now()
 
 
 def is_valid_password(password):
@@ -151,9 +151,6 @@ def logout():
     return redirect('/')
 
 
-
-# PROFILE METHODS
-
 def authenticate(inner_function):
     """
     :param inner_function: any python function that accepts a user object
@@ -194,7 +191,89 @@ def profile(user):
     # front-end portals
     tickets = bn.get_all_tickets()
     return render_template('index.html', user=user, tickets=tickets)
+    
+#updating existing ticket using update form on user profile page    
+@app.route('/', methods=['POST'])
+def update_post():
+    #extract contents of the update form
+    name = request.form.get('update_name')
+    price = request.form.get('update_price')
+    quantity = request.form.get('update_quantity')
+    date = request.form.get('update_date')
+    
+    #initialize error message to be empty
+    error_message = None
+    
+    #check that the given ticket name exists in the database
+    ticket = bn.get_ticket(name=name)
+    if not ticket:
+        error_message = 'no such ticket exists'
+        
+    #check that the ticket name is alphanumeric only, space allowed only if not first or last character, and contains less than 60 chars
+    if is_valid_ticket_name(str(name)) == False:
+        error_message = 'invalid ticket name'
+        
+    #check ticket quantity is greater than 0 and less or equal to 100
+    if is_valid_ticket_quanitity(quantity) == False:
+        error_message = 'invalid ticket quantity'
+       
+    #check ticket price is in the range 10 to 100 (including 10 and 100)
+    if is_valid_ticket_price(price) == False:
+        error_message = 'invalid ticket price'
+        
+    #check that date format is YYYYMMDD
+        
+    #save ticket to database
+    ticket = bn.store_ticket(name=name, price=price, quantity=quantity, date=date)
+    
+    #if theres an error message, output that message. Otherwise, post and redirect to user profile page
+    if error_message:
+        return render_template('index.html', update_message=error_message)
+    else:
+        return redirect('/')
+    
+#selling a ticket using sell form on user profile page
+@app.route('/', methods=['POST'])
+def sell_post():
+    ticket_name = request.form['name']
+    ticket_quantity = int(request.form['quantity'])
+    ticket_price = float(request.form['price'])
+    ticket_date = request.form['date']
+    ticket_date = datetime.datetime.strptime(ticket_date, '%Y-%m-%d')
+    user_email = request.form['user']
+    user = bn.get_user(user_email)
 
+    message = ""
+
+    # check name
+    if not is_valid_ticket_name(ticket_name):
+        message = "Ticket name is invalid."
+    # check quantity
+    if not is_valid_ticket_quanitity(ticket_quantity):
+        message = "Ticket quantity must be between 0 and 100."
+    # check price
+    if not is_valid_ticket_price(ticket_price):
+        message = "Ticket price is invalid."
+    # check date
+    if not is_ticket_date_valid(ticket_date):
+        message = "Ticket date is invalid."
+
+    if not message: # if message is empty, indicating no validation errors
+        message = "Ticket created successfully."
+        bn.sell_ticket(ticket_name, ticket_quantity, ticket_price, ticket_date, user.id)
+
+    # redirect user to profile page with result message
+    return redirect("/?message={}".format(message))
+
+#buying a ticket using buy form on user profile page
+@app.route('/', methods=['POST'])
+def buy_post():
+    #extract contents of buy form
+    name = request.form.get('buy_name')
+    quantity = request.form.get('buy_quantity')
+    
+    #initialize error message to be empty
+    error_message = None
     
 #assesses whether or not the ticket name is valid    
 def is_valid_ticket_name(name):
@@ -216,163 +295,9 @@ def is_valid_ticket_price(price):
     
 #assesses whether or not the ticket date matches the proper format
 def is_valid_ticket_date(date):
-    return True if date > datetime.datetime.now() else False
-    
-#updating existing ticket using update form on user profile page    
-@app.route('/', methods=['POST'])
-#@authenticate
-def update_post():
-    #extract contents of the update form
-    name = request.form.get('update_name')
-    price = request.form.get('update_price')
-    quantity = request.form.get('update_quantity')
-    date = request.form.get('update_date')
-    
-    #initialize error message to be empty
-    error_message = None
-    
-    #check that the given ticket name exists in the database
-    ticket = bn.get_ticket(name=name)
-    if not ticket:
-        error_message = 'no such ticket exists'
-        
-    #check that the ticket name is alphanumeric only, space allowed only if not first or last character, and contains less than 60 chars
-    if is_valid_ticket_name(str(name)) == False:
-        error_message = 'invalid ticket name'
-        
-    #check ticket quantity is greater than 0 and less or equal to 100
-    if is_valid_ticket_quantity(quantity) == False:
-        error_message = 'invalid ticket quantity'
-       
-    #check ticket price is in the range 10 to 100 (including 10 and 100)
-    if is_valid_ticket_price(price) == False:
-        error_message = 'invalid ticket price'
-        
-    #check that date format is YYYYMMDD
-
-    #Date must be given in the format YYYYMMDD (e.g. 20200901)
-def is_ticket_date_valid(ticket_date):
     return True if ticket_date > datetime.datetime.now() else False
-def get_all_tickets():
-    tickets = Ticket.query.all()
-    return tickets
-    
 
-    if is_valid_ticket_date(date) == False:
-        error_message = 'invalid ticket date'
-        
-    #save ticket to database
-    ticket = bn.store_ticket(name=name, price=price, quantity=quantity, date=date)
-    
-    #if theres an error message, output that message. Otherwise, post and redirect to user profile page
-    if error_message:
-        return render_template('index.html', update_message=error_message, user=user)
-    else:
-        return redirect('/')
-    
-    #The added new ticket information will be posted on the user profile page
-@app.route('/sell', methods=['POST'])
-def sellticket():
-    name = request.form['name']
-    quantity = int(request.form['quantity'])
-    price = float(request.form['price'])
-    date = request.form['date']
-    date = datetime.datetime.strptime(date, '%Y-%m-%d')
-    user_email = request.form['user']
-    user = bn.get_user(user_email)
-
-    #initialize error message to be empty
-    message = None
-
-
-#Tests for R4 SELL
-
-    # check name
-    ticket = bn.get_ticket(name=name)
-    if not ticket:
-        message = 'no such ticket exists'
-    #check that the ticket name is alphanumeric only, space allowed only if not first or last character, and contains less than 60 chars
-    if is_valid_ticket_name(str(name)) == False:
-        message = 'invalid ticket name'
-    # check quantity
-    if not is_valid_ticket_quanitity(quantity):
-        message = "Ticket quantity must be between 0 and 100."
-    # check price
-    if not is_valid_ticket_price(price):
-        message = "Ticket price is invalid."
-    # check date
-    if not is_valid_ticket_date(date):
-        message = "Ticket date is invalid."
-
-    if not message: # if message is empty, indicating no validation errors
-        message = "Ticket created successfully."
-        bn.sell_ticket(name, quantity, price, date, user.id)
-
-    # redirect user to profile page with result message
-    
-    return redirect("/?message={}".format(message))
-    
-
-
-#buying a ticket using buy form on user profile page
-@app.route('/', methods=['POST'])
-def buy_post():
-    #extract contents of buy form
-    name = request.form.get('buy_name')
-    buy_quantity = request.form.get('buy_quantity')
-    sell_quantity = request.form.get('sell_quantity')
-    user_balance = request.form.get('balance')
-    #initialize error message to be empty
-
-
-    error_message = None
-
-     #check that the ticket name is alphanumeric only, space allowed only if not first or last character, and contains less than 60 chars
-    if is_valid_ticket_name(str(name)) == False:
-        error_message = 'invalid ticket name'
-        
-    #check ticket quantity is greater than 0 and less or equal to 100
-    if is_valid_ticket_quanitity(quantity) == False:
-        error_message = 'invalid ticket quantity'
-       
-    #check ticket price is in the range 10 to 100 (including 10 and 100)
-    if is_valid_ticket_price(price) == False:
-        error_message = 'invalid ticket price'
-    
-    #check if quantity to buy is less than quantity available
-    if is_valid_ticket_availability(buy_quantity, sell_quantity) == False:
-        error_message = 'not enough tickets'
-
-    error_message = None   
-
-    
-    #check if user has enough balance to purchase tickets
-    if is_valid_balance(balance, price, buy_quantity) == False:
-        error_message = 'not enough funds'
-
-
-#get user balance    
-def get_user_balance(email):
-    #start by finding the user 
-    user = bn.get_user(email)
-    balance = user.balance
-    return balance
-
-
-#assesses whether or not there are enough tickets to sell
-def is_valid_ticket_availability(buy_quantity, sell_quantity):
-    return False if ticket_buy > quantity else True
-
-#assesses whether or not there are enough funds in user account
-def is_valid_balance(balance, price, buy_quantity):
-    return False if balance < (price * buy_quantity * 1.4) else True
-
-  
-# 404 METHODS
 #Added 404 Error Handler
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html')
-
-
-
