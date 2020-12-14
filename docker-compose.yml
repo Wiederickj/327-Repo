@@ -15,7 +15,7 @@ services:
       - seetgeek-site
 
   seetgeek-db:
-    image: mysql:5.7
+    image: limestone2/qa327:v1
     environment:
       MYSQL_ROOT_PASSWORD: root
     command: --init-file /data/application/init.sql
