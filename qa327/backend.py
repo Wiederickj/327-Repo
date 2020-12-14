@@ -95,3 +95,4 @@ def buy_ticket(ticket_id, buyer_id):
     buyer.balance -= ticket.price*decimal.Decimal("1.30")*decimal.Decimal("1.00")
     Ticket.query.filter_by(id=int(ticket_id)).delete()
     db.session.commit()
+
